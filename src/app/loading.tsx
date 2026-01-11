@@ -1,7 +1,3 @@
 export default function Loading() {
-  return (
-    <div className="py-10">
-      <p>Loading…</p>
-    </div>
-  );
+  return <p className="py-10">Loading team data...</p>;
 }
