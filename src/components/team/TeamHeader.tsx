@@ -7,7 +7,7 @@ interface TeamHeaderProps {
 
 export default function TeamHeader({ team }: TeamHeaderProps) {
   return (
-    <header className="flex items-center gap-4">
+    <header className="flex items-center gap-4 pb-4 border-b">
       <Image
         src={team.crest}
         alt={team.name}
@@ -17,7 +17,7 @@ export default function TeamHeader({ team }: TeamHeaderProps) {
       />
 
       <div>
-        <h1 className="text-3xl font-bold">{team.name}</h1>
+        <h1 className="text-3xl font-bold leading-tight">{team.name}</h1>
         <p className="text-sm text-gray-500">{team.venue}</p>
       </div>
     </header>

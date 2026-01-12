@@ -5,24 +5,21 @@ interface NextMatchProps {
 }
 
 export default function NextMatch({ match }: NextMatchProps) {
-  if (!match) {
-    return (
-      <section>
-        <h2 className="text-xl font-semibold mb-2">Next Match</h2>
-        <p>No upcoming matches</p>
-      </section>
-    );
-  }
-
   return (
-    <section>
-      <h2 className="text-xl font-semibold mb-2">Next Match</h2>
+    <section className="rounded-lg border bg-gray-50 p-5">
+      <h2 className="text-lg font-semibold mb-3">Next Match</h2>
 
-      <div className="border rounded p-4">
-        <p className="font-medium">
-          {match.homeTeam.name} vs {match.awayTeam.name}
-        </p>
-      </div>
+      {!match ? (
+        <p className="text-sm text-gray-500">No upcoming matches</p>
+      ) : (
+        <div className="flex justify-between items-center">
+          <p className="font-medium">
+            {match.homeTeam.name} vs {match.awayTeam.name}
+          </p>
+
+          <span className="text-sm text-gray-600">Scheduled</span>
+        </div>
+      )}
     </section>
   );
 }
