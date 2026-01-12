@@ -1,23 +1,21 @@
 import { getTeam, getTeamMatches, getNextMatch } from "@/lib/api";
-import { Team, Match } from "@/lib/types";
-import Image from "next/image";
+import NextMatch from "@/components/team/NextMatch";
+import MatchList from "@/components/team/MatchList";
+import TeamHeader from "@/components/team/TeamHeader";
 
 interface TeamPageProps {
   params: { id: string } | Promise<{ id: string }>;
 }
 
 export default async function TeamPage(props: TeamPageProps) {
-  // Await params in case it's a Promise
   const params = await props.params;
-
-  console.log("params.id:", params.id, typeof params.id);
 
   if (!params.id) {
     throw new Error("Invalid team id");
   }
 
-  const teamId = parseInt(params.id, 10);
-  if (isNaN(teamId)) {
+  const teamId = Number(params.id);
+  if (Number.isNaN(teamId)) {
     throw new Error("Invalid team id");
   }
 
@@ -28,40 +26,12 @@ export default async function TeamPage(props: TeamPageProps) {
   ]);
 
   return (
-    <section className="py-10 space-y-6">
-      <header className="flex items-center gap-4">
-        <Image
-          src={team.crest}
-          alt={team.name}
-          width={64}
-          height={64}
-          className="object-contain"
-        />
-        <h1 className="text-3xl font-bold">{team.name}</h1>
-      </header>
+    <section className="py-10 space-y-8">
+      <TeamHeader team={team} />
 
-      <div>
-        <h2 className="text-xl font-semibold mb-2">Next Match</h2>
-        {nextMatch.matches?.length ? (
-          <p>
-            {nextMatch.matches[0].homeTeam.name} vs{" "}
-            {nextMatch.matches[0].awayTeam.name}
-          </p>
-        ) : (
-          <p>No upcoming matches</p>
-        )}
-      </div>
+      <NextMatch match={nextMatch.matches?.[0]} />
 
-      <div>
-        <h2 className="text-xl font-semibold mb-2">Recent Matches</h2>
-        <ul className="space-y-2">
-          {matches.matches.map((match: Match) => (
-            <li key={match.id} className="border p-3 rounded">
-              {match.homeTeam.name} vs {match.awayTeam.name}
-            </li>
-          ))}
-        </ul>
-      </div>
+      <MatchList matches={matches.matches} />
     </section>
   );
 }
