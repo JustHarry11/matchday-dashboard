@@ -5,30 +5,57 @@ interface MatchCardProps {
 }
 
 export default function MatchCard({ match }: MatchCardProps) {
-  const { homeTeam, awayTeam, score } = match;
+  const isFinished = match.status === "FINISHED";
 
-  const hasScore =
-    score.fullTime.home !== null &&
-    score.fullTime.away !== null;
+  const home = match.score.fullTime.home;
+  const away = match.score.fullTime.away;
+
+  // Determine result (from home team POV – acceptable for now)
+  let result: "win" | "draw" | "loss" | "upcoming" = "upcoming";
+
+  if (isFinished && home !== null && away !== null) {
+    if (home > away) result = "win";
+    else if (home < away) result = "loss";
+    else result = "draw";
+  }
+
+  const resultStyles = {
+    win: "border-l-4 border-green-500 bg-green-50",
+    draw: "border-l-4 border-gray-400 bg-gray-50",
+    loss: "border-l-4 border-red-500 bg-red-50",
+    upcoming: "border-l-4 border-blue-400 bg-blue-50",
+  };
+
+  const formattedDate = new Date(match.utcDate).toLocaleString("en-GB", {
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   return (
-    <li className="rounded-lg border p-4 hover:bg-gray-50 transition">
+    <li className={`p-4 rounded ${resultStyles[result]}`}>
       <div className="flex justify-between items-center">
-        <div className="flex flex-col">
-          <span className="font-medium">
-            {homeTeam.name} vs {awayTeam.name}
-          </span>
-
-          <span className="text-sm text-gray-500">
-            Full Time
-          </span>
+        <div>
+          <p className="font-semibold">
+            {match.homeTeam.name} vs {match.awayTeam.name}
+          </p>
+          <p className="text-sm text-gray-600">{formattedDate}</p>
         </div>
 
-        {hasScore && (
-          <span className="text-lg font-semibold">
-            {score.fullTime.home} – {score.fullTime.away}
-          </span>
-        )}
+        <div className="text-right">
+          {isFinished ? (
+            <>
+              <p className="text-xl font-bold">
+                {home} – {away}
+              </p>
+              <p className="text-xs text-gray-500">FT</p>
+            </>
+          ) : (
+            <p className="text-sm font-medium text-blue-600">Upcoming</p>
+          )}
+        </div>
       </div>
     </li>
   );
