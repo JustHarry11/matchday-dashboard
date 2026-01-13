@@ -7,55 +7,49 @@ const headers = {
   "User-Agent": "matchday-dashboard",
 };
 
-async function fetchFromAPI<T>(endpoint: string): Promise<T> {
+async function fetchFromAPI<T>(
+  endpoint: string,
+  revalidate = 60
+): Promise<T> {
   const res = await fetch(`${API_BASE_URL}${endpoint}`, {
     headers,
-    next: { revalidate: 60 },
-    
+    next: { revalidate },
   });
 
   if (!res.ok) {
-    const text = await res.text();
-    console.error("API error:", res.status, text);
     throw new Error(`API Error ${res.status}`);
-    
   }
 
   return res.json();
 }
 
-// ✅ Explicit return types
+
 export function getTeam(teamId: number): Promise<Team> {
-  return fetchFromAPI<Team>(`/teams/${teamId}`);
+  return fetchFromAPI<Team>(`/teams/${teamId}`, 3600);
 }
 
-export function getTeamMatches(
-  teamId: number
-): Promise<{ matches: Match[] }> {
+export function getTeamMatches(teamId: number) {
   return fetchFromAPI<{ matches: Match[] }>(
-    `/teams/${teamId}/matches?status=SCHEDULED&limit=5`
+    `/teams/${teamId}/matches?status=SCHEDULED&limit=5`,
+    300
   );
 }
 
-export function getRecentMatches(
-  teamId: number
-): Promise<{ matches: Match[] }> {
+export function getRecentMatches(teamId: number) {
   return fetchFromAPI<{ matches: Match[] }>(
-    `/teams/${teamId}/matches?status=FINISHED&limit=5`
+    `/teams/${teamId}/matches?status=FINISHED&limit=5`,
+    300
   );
 }
 
-
-export function getNextMatch(
-  teamId: number
-): Promise<{ matches: Match[] }> {
+export function getNextMatch(teamId: number) {
   return fetchFromAPI<{ matches: Match[] }>(
-    `/teams/${teamId}/matches?status=SCHEDULED&limit=1`
+    `/teams/${teamId}/matches?status=SCHEDULED&limit=1`,
+    120
   );
 }
 
 export async function getTeams(): Promise<Team[]> {
-  const data = await fetchFromAPI<{ teams: Team[] }>("/teams");
+  const data = await fetchFromAPI<{ teams: Team[] }>("/teams", 3600);
   return data.teams;
 }
-
