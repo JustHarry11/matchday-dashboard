@@ -33,9 +33,18 @@ export function getTeamMatches(
   teamId: number
 ): Promise<{ matches: Match[] }> {
   return fetchFromAPI<{ matches: Match[] }>(
-    `/teams/${teamId}/matches?limit=5`
+    `/teams/${teamId}/matches?status=SCHEDULED&limit=5`
   );
 }
+
+export function getRecentMatches(
+  teamId: number
+): Promise<{ matches: Match[] }> {
+  return fetchFromAPI<{ matches: Match[] }>(
+    `/teams/${teamId}/matches?status=FINISHED&limit=5`
+  );
+}
+
 
 export function getNextMatch(
   teamId: number
@@ -44,3 +53,9 @@ export function getNextMatch(
     `/teams/${teamId}/matches?status=SCHEDULED&limit=1`
   );
 }
+
+export async function getTeams(): Promise<Team[]> {
+  const data = await fetchFromAPI<{ teams: Team[] }>("/teams");
+  return data.teams;
+}
+

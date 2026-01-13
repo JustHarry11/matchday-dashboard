@@ -11,6 +11,7 @@ interface MatchListProps {
 export default function MatchList({ matches }: MatchListProps) {
   const [filter, setFilter] = useState<"all" | "finished" | "upcoming">("all");
 
+  // Filter matches based on tab
   const filtered = matches.filter((m) => {
     if (filter === "all") return true;
     if (filter === "finished") return m.status === "FINISHED";
@@ -20,8 +21,10 @@ export default function MatchList({ matches }: MatchListProps) {
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-2">Recent Matches</h2>
-      <div className="flex gap-2 mb-2">
+      <h2 className="text-xl font-semibold mb-2">Matches</h2>
+
+      {/* Filter buttons */}
+      <div className="flex gap-2 mb-4">
         <button
           className={`px-3 py-1 rounded ${filter === "all" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
           onClick={() => setFilter("all")}
@@ -41,11 +44,17 @@ export default function MatchList({ matches }: MatchListProps) {
           Upcoming
         </button>
       </div>
-      <ul className="space-y-2">
-        {filtered.map((match) => (
-          <MatchCard key={match.id} match={match} />
-        ))}
-      </ul>
+
+      {/* Match list */}
+      {filtered.length > 0 ? (
+        <ul className="space-y-2">
+          {filtered.map((match) => (
+            <MatchCard key={match.id} match={match} />
+          ))}
+        </ul>
+      ) : (
+        <p className="text-gray-500">No matches to display</p>
+      )}
     </div>
   );
 }
