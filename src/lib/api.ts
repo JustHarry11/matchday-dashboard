@@ -53,3 +53,12 @@ export async function getTeams(): Promise<Team[]> {
   const data = await fetchFromAPI<{ teams: Team[] }>("/teams", 3600);
   return data.teams;
 }
+
+// src/lib/api.ts
+// Fetch only Premier League teams (ID 2021)
+export async function getPremierLeagueTeams(): Promise<Team[]> {
+  const data = await fetchFromAPI<{ teams: Team[] }>(
+    "/competitions/2021/teams"
+  );
+  return data.teams;
+}

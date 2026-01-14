@@ -5,6 +5,7 @@ import NextMatch from "@/components/team/NextMatch";
 import MatchList from "@/components/team/MatchList";
 import StatsCard from "@/components/team/StatsCard";
 import BackButton from "@/components/team/BackButton";
+import RememberTeam from "@/components/team/RememberTeam";
 
 
 interface TeamPageProps {
@@ -36,6 +37,8 @@ const nextMatch = nextMatchData.matches[0];
 
       {/* Team info */}
       <TeamHeader team={team} />
+
+      <RememberTeam teamId={team.id} />
 
       {/* Next match */}
       {nextMatch && <NextMatch match={nextMatch} />}

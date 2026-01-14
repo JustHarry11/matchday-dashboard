@@ -1,24 +1,22 @@
-import Image from "next/image";
+"use client";
+
 import { Team } from "@/lib/types";
+import { useFavourites } from "@/hooks/useFavourites";
 
-interface TeamHeaderProps {
-  team: Team;
-}
+export default function TeamHeader({ team }: { team: Team }) {
+  const { favourites, toggleFavourite } = useFavourites();
+  const isFavourite = favourites.includes(team.id);
 
-export default function TeamHeader({ team }: TeamHeaderProps) {
   return (
-    <header className="flex items-center gap-4 mb-6">
-      <Image
-        src={team.crest}
-        alt={team.name}
-        width={64}
-        height={64}
-        className="object-contain"
-      />
-      <div>
-        <h1 className="text-3xl font-bold">{team.name}</h1>
-        <p className="text-sm text-gray-500">{team.venue}</p>
-      </div>
-    </header>
+    <div className="flex items-center justify-between">
+      <h1 className="text-3xl font-bold">{team.name}</h1>
+      <button
+        onClick={() => toggleFavourite(team.id)}
+        className="text-2xl"
+        aria-label="Toggle favorite"
+      >
+        {isFavourite ? "⭐" : "☆"}
+      </button>
+    </div>
   );
 }
